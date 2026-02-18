@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from core.colours import *
 import time
@@ -15,16 +16,17 @@ def create_social_accounts(person_data):
         driver.get("https://www.facebook.com/r.php")
         time.sleep(2)  # Wait for page load
 
-        # Fill in form (example fields; adjust selectors as needed)
-        driver.find_element_by_name("firstname").send_keys(person_data['name'].split()[0])
-        driver.find_element_by_name("lastname").send_keys(person_data['name'].split()[-1])
-        driver.find_element_by_name("reg_email__").send_keys(person_data['email'])
-        driver.find_element_by_name("reg_passwd__").send_keys("SecurePass123!")
-        driver.find_element_by_name("birthday_day").send_keys(person_data['birthday'].split('/')[0])
-        driver.find_element_by_name("birthday_month").send_keys(person_data['birthday'].split('/')[1])
-        driver.find_element_by_name("birthday_year").send_keys(person_data['birthday'].split('/')[2])
-        driver.find_element_by_css_selector(f"input[value='{person_data['gender'].lower()[0]}']").click()
-        driver.find_element_by_name("websubmit").click()
+        # Fill in form fields using the Selenium 4 API (By.NAME instead of
+        # the deprecated find_element_by_name shorthand removed in Selenium 4)
+        driver.find_element(By.NAME, "firstname").send_keys(person_data['name'].split()[0])
+        driver.find_element(By.NAME, "lastname").send_keys(person_data['name'].split()[-1])
+        driver.find_element(By.NAME, "reg_email__").send_keys(person_data['email'])
+        driver.find_element(By.NAME, "reg_passwd__").send_keys("SecurePass123!")
+        driver.find_element(By.NAME, "birthday_day").send_keys(person_data['birthday'].split('/')[0])
+        driver.find_element(By.NAME, "birthday_month").send_keys(person_data['birthday'].split('/')[1])
+        driver.find_element(By.NAME, "birthday_year").send_keys(person_data['birthday'].split('/')[2])
+        driver.find_element(By.CSS_SELECTOR, f"input[value='{person_data['gender'].lower()[0]}']").click()
+        driver.find_element(By.NAME, "websubmit").click()
         
         time.sleep(5)  # Wait for submission
         print(f"{good} Facebook account created for {person_data['name']}")
